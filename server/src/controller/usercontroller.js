@@ -240,6 +240,33 @@ export const AppliedJobs = async (req, res, next) => {
 
 
 
+export const withdrawApplication = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const applicationId = req.params.id;
+
+    const application = await Application.findOneAndDelete({
+      _id: applicationId,
+      userID: userId,
+    });
+
+    if (!application) {
+      return res.status(404).json({
+        message: "Application not found or unauthorized",
+      });
+    }
+
+    res.status(200).json({
+      message: "Application withdrawn successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
 
 
 

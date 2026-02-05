@@ -58,7 +58,7 @@ const Jobs = () => {
               return (
                 <article
                   key={job._id || job.id}
-                  className="mb-6 bg-[var(--primary)] rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 ease-out hover:shadow-cyan-400 hover:-translate-y-4 hover:scale-[1.05]"
+                  className="mb-6 bg-[var(--primary)] rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 ease-out hover:shadow-[#165998] hover:-translate-y-4 hover:scale-[1.05]"
                 >
                   <div className="p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-12 gap-4 items-start">
                     <div className="sm:col-span-2 flex items-center">

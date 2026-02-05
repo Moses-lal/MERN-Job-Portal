@@ -133,7 +133,7 @@ const Register = () => {
           </div>
 
           <form className="space-y-2 borde p-3 text-[var(--primary)]" onSubmit={handleSubmit}>
-          <h1 className="text-[var(--text)] text-2xl font-bold mb-3 "> Register/Sign Up   </h1>
+          <h1 className="text-[var(--text)] text-2xl font-bold mb-3 "> Register / Sign Up   </h1>
 
             <div>
               <label

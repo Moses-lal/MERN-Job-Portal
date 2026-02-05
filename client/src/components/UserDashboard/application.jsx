@@ -50,13 +50,13 @@ const Application = () => {
 
   const handleView = (application) => {
     // navigate to JobDetails with job in state
-    navigate("/job-details", { state: { selectedJob: application.jobID } });
+    navigate("/JobDetails", { state: { selectedJob: application.jobID } });
   };
 
   const handleWithdraw = async (id) => {
     if (!confirm("Are you sure you want to withdraw this application?")) return;
     try {
-      await api.delete(`/user/applications/${id}`);
+      await api.delete(`/user/applied-jobs/${id}`);
       toast.success("Application withdrawn");
       fetchAppliedJobs();
     } catch (error) {
