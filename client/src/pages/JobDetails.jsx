@@ -26,6 +26,7 @@ const JobDetails = () => {
     try {
       const res = await api.post("/user/apply-job", { jobID: selectedJob._id });
       toast.success(res.data.message);
+      // toast.success("Application submitted successfully!");
     } catch (error) {
       console.log(error);
       toast.error(
@@ -33,7 +34,7 @@ const JobDetails = () => {
       );
     }
 
-    toast.success("Application submitted successfully!");
+    // toast.success("Application submitted successfully!");
   };
 
   const handleSave = () => {
