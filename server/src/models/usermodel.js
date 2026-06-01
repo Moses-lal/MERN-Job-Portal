@@ -118,6 +118,95 @@ const userSchema = mongoose.Schema(
       enum: ["applicant", "recruiter", "admin"],
       default: "applicant",
     },
+    preferredjob: {
+      type: [String],
+      required: function () {
+        return this.role === "applicant";
+      },
+     enum: ["internship", "fulltime", "parttime", "wfh", "hybrid", "contract", "freelance"],
+      default: ["internship"],
+    },
+     availability: {
+      type: [String],
+      required: function () {
+        return this.role === "applicant";
+      },
+       enum: ["immediate", "15days", "1month", "morethan1month"],
+      default: ["immediate"],
+    },
+    preferredlocation: {
+      type: [String],
+      required: function () {
+        return this.role === "applicant";
+      },
+      default: []
+    },
+
+
+    
+education: [
+  {
+    degree:     { type: String, required: function () {
+        return this.role === "applicant";
+      }, },
+    institute:  { type: String, required: function () {
+        return this.role === "applicant";
+      }, },
+    percentage: { type: String, required: function () {
+        return this.role === "applicant";
+      },},
+  }
+],
+
+
+
+experience: [
+  {
+    companyName: { type: String, required:  function () {
+        return this.role === "applicant";
+      }, },
+    role:        { type: String, required:  function () {
+        return this.role === "applicant";
+      }, },
+    startDate:   { type: String, required:  function () {
+        return this.role === "applicant";
+      }, },
+    endDate:     { type: String, required:  function () {
+        return this.role === "applicant";
+      }, },
+  }
+],
+
+
+projects: [
+  {
+    projectName: { type: String, required:  function () {
+        return this.role === "applicant";
+      }, },
+    startDate:   { type: String, required:  function () {
+        return this.role === "applicant";
+      }, },
+    endDate:     { type: String, required:  function () {
+        return this.role === "applicant";
+      },},
+    techStack:   { type: String, required:  function () {
+        return this.role === "applicant";
+      }, },
+  }
+],
+
+
+
+
+     achievements: {
+      type: String,
+      required: function () {
+        return this.role === "applicant";
+      },
+      default: function () {
+        return this.role === "applicant" ? "N/A" : undefined;
+      },
+    },
     companyName: {
       type: String,
       required: function () {

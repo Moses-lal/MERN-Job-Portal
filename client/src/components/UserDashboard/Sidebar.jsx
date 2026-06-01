@@ -59,9 +59,16 @@ const Sidebar = ({ active, setActive }) => {
       </div>
     ));
   };
+
+
+
+
+
+
+  
   return (
     <>
-      <div className="bg-gradient-to-b from-[var(--primary)]  to-[var(--secondary)] h-full p-2 flex flex-col justify-between">
+      <div className="bg-gradient-to-b from-[var(--primary)]  to-[var(--secondary)]  h-full p-2 flex flex-col justify-between">
         <div>
           <h1 className="text-2xl border-b-2 text-center text-[var(--text)] font-bold pb-3 pt-3">
             {" "}

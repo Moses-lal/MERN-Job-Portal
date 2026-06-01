@@ -266,6 +266,168 @@ export const withdrawApplication = async (req, res, next) => {
 
 
 
+export const UpdateJobPreference = async (req, res, next) => {
+  try {
+    const { preferredjob, availability, preferredlocation } = req.body;
+    const currentUser = req.user;
+
+    if (!preferredjob || !availability || !preferredlocation) {
+      const error = new Error("All fields are required");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    currentUser.preferredjob      = preferredjob;
+    currentUser.availability      = availability;
+    currentUser.preferredlocation = preferredlocation;
+
+    const updatedUser = await currentUser.save();
+
+    res.status(200).json({
+      message: "Job preferences updated successfully",
+      data: updatedUser,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+export const AddEducation = async (req, res, next) => {
+  try {
+    const { degree, institute, percentage } = req.body;
+    const currentUser = req.user;
+
+    if (!degree || !institute || !percentage) {
+      const error = new Error("All fields are required");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    currentUser.education.push({ degree, institute, percentage });
+
+    const updatedUser = await currentUser.save();
+
+    res.status(200).json({
+      message: "Education added successfully",
+      data: updatedUser,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+export const DeleteEducation = async (req, res, next) => {
+  try {
+    const { eduId } = req.params;
+    const currentUser = req.user;
+
+    currentUser.education = currentUser.education.filter(
+      (edu) => edu._id.toString() !== eduId
+    );
+
+    const updatedUser = await currentUser.save();
+
+    res.status(200).json({
+      message: "Education deleted successfully",
+      data: updatedUser,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const AddExperience = async (req, res, next) => {
+  try {
+    const { companyName, role, startDate, endDate } = req.body;
+    const currentUser = req.user;
+
+    if (!companyName || !role || !startDate || !endDate) {
+      const error = new Error("All fields are required");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    currentUser.experience.push({ companyName, role, startDate, endDate });
+    const updatedUser = await currentUser.save();
+
+    res.status(200).json({
+      message: "Experience added successfully",
+      data: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const DeleteExperience = async (req, res, next) => {
+  try {
+    const { expId } = req.params;
+    const currentUser = req.user;
+
+    currentUser.experience = currentUser.experience.filter(
+      (exp) => exp._id.toString() !== expId
+    );
+
+    const updatedUser = await currentUser.save();
+
+    res.status(200).json({
+      message: "Experience deleted successfully",
+      data: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const AddProject = async (req, res, next) => {
+  try {
+    const { projectName, startDate, endDate, techStack } = req.body;
+    const currentUser = req.user;
+
+    if (!projectName || !startDate || !endDate || !techStack) {
+      const error = new Error("All fields are required");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    currentUser.projects.push({ projectName, startDate, endDate, techStack });
+    const updatedUser = await currentUser.save();
+
+    res.status(200).json({
+      message: "Project added successfully",
+      data: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const DeleteProject = async (req, res, next) => {
+  try {
+    const { projectId } = req.params;
+    const currentUser = req.user;
+
+    currentUser.projects = currentUser.projects.filter(
+      (proj) => proj._id.toString() !== projectId
+    );
+
+    const updatedUser = await currentUser.save();
+
+    res.status(200).json({
+      message: "Project deleted successfully",
+      data: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 
