@@ -55,15 +55,31 @@ const userSchema = mongoose.Schema(
         return this.role === "applicant" ? "N/A" : undefined;
       },
     },
-    qualification: {
+    title: {
       type: String,
       required: function () {
-        return this.role === "applicant";
+        return this.role === "recruiter";
       },
-      default: function () {
-        return this.role === "applicant" ? "N/A" : undefined;
-      },
+      default: ""
     },
+    pronouns:  {
+       type: String,
+       required: function () {
+        return this.role === "recruiter";
+      },
+      default: ""
+     },
+
+     location:  {
+       type: String, 
+       required: function () {
+        return this.role === "recruiter";
+      },
+       default: ""
+      },
+
+
+
     bio: {
       type: String,
       required: function () {
@@ -196,17 +212,23 @@ projects: [
 ],
 
 
-
-
-     achievements: {
-      type: String,
-      required: function () {
-        return this.role === "applicant";
+companyeducation: {
+  degree:     { 
+    type: String,
+    required: function () {
+        return this.role === "recruiter";
       },
-      default: function () {
-        return this.role === "applicant" ? "N/A" : undefined;
+     default: "" },
+  institute:  { type: String, default: "" },
+},
+
+recruiterExperience: {
+  companyName: { type: String,
+    required: function () {
+        return this.role === "recruiter";
       },
-    },
+     default: "" },
+},
     companyName: {
       type: String,
       required: function () {

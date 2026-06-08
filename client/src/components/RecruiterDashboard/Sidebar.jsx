@@ -10,7 +10,7 @@ const navItems = [
   { value: "overview", text: "Overview", icons: <FcHome /> },
   { value: "profile", text: "Profile", icons: <FcManager /> },
   { value: "jobs", text: "Jobs", icons: <GiSuitcase /> },
-  { value: "application", text: "Application", icons: <FcDocument /> },
+  { value: "applicant", text: "Applicant", icons: <FcDocument /> },
 ];
 
 

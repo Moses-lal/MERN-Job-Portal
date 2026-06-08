@@ -28,7 +28,6 @@ const UpdateJobPreferenceModel = ({ isOpen, onClose }) => {
     { value: "morethan1month", label: "More than 1 Month" },
   ];
 
-  // For location input
   const handleLocationKeyDown = (e) => {
     if (e.key === "Enter" && e.target.value.trim()) {
       e.preventDefault();
@@ -50,7 +49,6 @@ const UpdateJobPreferenceModel = ({ isOpen, onClose }) => {
     }));
   };
 
-  // For job type toggle
   const toggleJobType = (value) => {
     setPreferenceData((prev) => ({
       ...prev,
@@ -60,7 +58,6 @@ const UpdateJobPreferenceModel = ({ isOpen, onClose }) => {
     }));
   };
 
-  // For availability radio
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPreferenceData((prev) => ({ ...prev, [name]: value }));
@@ -89,54 +86,54 @@ const UpdateJobPreferenceModel = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="fixed inset-0 flex justify-center items-center bg-[var(--primary)]/96">
-        <div className="bg-white w-2xl h-[80vh] border rounded-xl overflow-y-auto">
+    <div className="fixed inset-0 flex justify-center items-center bg-[var(--primary)]/96">
+      <div className="bg-white w-2xl h-[80vh] border rounded-xl overflow-y-auto">
 
-          {/* Header */}
-          <div className="flex justify-between border-b-2 p-2 sticky top-0 bg-[var(--primary)]">
-            <span className="font-bold text-lg text-[var(--text)]">
-              Update Job Preferences
-            </span>
-            <button onClick={onClose} className="text-red-500 text-2xl">
-              <RiCloseCircleFill />
-            </button>
+        {/* Header */}
+        <div className="flex justify-between border-b-2 p-2 sticky top-0 bg-[var(--primary)]">
+          <span className="font-bold text-lg text-[var(--text)]">
+            Update Job Preferences
+          </span>
+          <button onClick={onClose} className="text-red-500 text-2xl">
+            <RiCloseCircleFill />
+          </button>
+        </div>
+
+        <div className="p-8 flex flex-col gap-6">
+
+          {/* Preferred Job Locations */}
+          <div className="flex flex-col gap-2">
+            <label className="text-[var(--primary)] font-semibold">
+              Preferred Job Locations
+            </label>
+            <input
+              type="text"
+              placeholder="Type a city and press Enter (e.g. Mumbai)"
+              onKeyDown={handleLocationKeyDown}
+              className="border p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-0"
+            />
+            <div className="flex flex-wrap gap-2 mt-1">
+              {preferenceData.preferredlocation?.map((loc) => (
+                <span
+                  key={loc}
+                  className="flex items-center gap-1 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium"
+                >
+                  {loc}
+                  <button
+                    onClick={() => removeLocation(loc)}
+                    className="text-blue-400 hover:text-red-500 transition"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
           </div>
 
-          <div className="p-8 pt-3 grid grid-cols-[30%_70%] gap-3 items-center">
-
-            {/* Preferred Location */}
+          {/* Job Type */}
+          <div className="flex flex-col gap-2">
             <label className="text-[var(--primary)] font-semibold">
-              Preferred Locations
-            </label>
-            <div className="flex flex-col gap-2">
-              <input
-                type="text"
-                placeholder="Type a city and press Enter"
-                onKeyDown={handleLocationKeyDown}
-                className="border p-2 rounded w-full"
-              />
-              <div className="flex flex-wrap gap-2">
-                {preferenceData.preferredlocation?.map((loc) => (
-                  <span
-                    key={loc}
-                    className="flex items-center gap-1 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium"
-                  >
-                    {loc}
-                    <button
-                      onClick={() => removeLocation(loc)}
-                      className="text-blue-400 hover:text-red-500"
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Job Type */}
-            <label className="text-[var(--primary)] font-semibold">
-              Job Type
+              Job Type <span className="text-gray-400 font-normal text-sm">(Select all that apply)</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {JOB_TYPES.map(({ value, label }) => (
@@ -154,8 +151,10 @@ const UpdateJobPreferenceModel = ({ isOpen, onClose }) => {
                 </button>
               ))}
             </div>
+          </div>
 
-            {/* Availability */}
+          {/* Availability */}
+          <div className="flex flex-col gap-2">
             <label className="text-[var(--primary)] font-semibold">
               Availability
             </label>
@@ -174,25 +173,27 @@ const UpdateJobPreferenceModel = ({ isOpen, onClose }) => {
                 </label>
               ))}
             </div>
+          </div>
 
-            {/* Buttons */}
+          {/* Action Buttons */}
+          <div className="flex gap-4 mt-2">
             <button
-              className="bg-red-500 text-white px-4 py-2 rounded mt-4 hover:bg-red-600"
+              className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600"
+              className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
               onClick={handleSubmit}
             >
               Save Preferences
             </button>
-
           </div>
+
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

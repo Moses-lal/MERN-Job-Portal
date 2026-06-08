@@ -1,6 +1,6 @@
-
+import Application from "../models/applicationmodel.js";
 import Job from "../models/jobModel.js";
-
+import User from "../models/usermodel.js";
 
 
 export const AddNewJobs = async (req, res, next) => {
@@ -55,8 +55,6 @@ export const AddNewJobs = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 
 export const GetPostedJobs = async (req, res, next) => {
@@ -135,4 +133,107 @@ export const UpdateJob = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+
+
+export const GetApplicants = async (req, res) => {
+  try {
+    const applications = await Application.find({
+      recruiterID: req.user.id,
+    })
+      .populate("userID")
+      .populate("jobID");
+
+    res.status(200).json({
+      success: true,
+      data: applications,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
+export const updateApplicationStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = [
+      "Applied",
+      "Under Review",
+      "Interview Scheduled",
+      "Offered",
+      "Rejected",
+    ];
+
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    const application = await Application.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.status(200).json({ message: "Status updated", data: application });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+
+export const UpdateRecruiterProfile = async (req, res) => {
+  try {
+
+    const {
+      pronouns,
+      title,
+      location,
+      degree,
+      institute,
+      companyName,
+    } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        pronouns,
+        title,
+        location,
+        "companyeducation.degree":         degree,
+        "companyeducation.institute":      institute,
+        "recruiterExperience.companyName": companyName,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+
+  }catch (error) {
+  console.error(error);
+
+  res.status(500).json({
+    success: false,
+    message: error.message,
+    stack: error.stack,
+  });
+}
 };
