@@ -1,72 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { FaInstagram } from "react-icons/fa6";
+import { FaLinkedin } from "react-icons/fa6";
+import { TbWorldShare } from "react-icons/tb";
+import { FaPhone } from "react-icons/fa6";
+import { FaXTwitter } from "react-icons/fa6";
+import { SiGmail } from "react-icons/si";
 import api from "../config/api";
 
 const JobDetails = () => {
   const { isLogin, isRecruiter } = useAuth();
-  const locationState = useLocation().state || {};
+  const { selectedJob: jobFromState } = useLocation().state || {};
   const navigate = useNavigate();
-  const { selectedJob } = locationState;
 
-  const handleApplyNow = async () => {
-    // Handle apply now action
+  const [selectedJob, setSelectedJob] = useState(jobFromState);
 
-    if (!isLogin) {
-      toast.error("Please login to apply for jobs.");
-      return;
+  useEffect(() => {
+    if (jobFromState?._id) {
+      api
+        .get(`/public/jobs/${jobFromState._id}`)
+        .then((res) => setSelectedJob(res.data.data))
+        .catch(() => {});
     }
-
-    if (isLogin && isRecruiter) {
-      toast.error("Recruiters cannot apply for jobs.");
-      return;
-    }
-
-    try {
-      const res = await api.post("/user/apply-job", { jobID: selectedJob._id });
-      toast.success(res.data.message);
-      // toast.success("Application submitted successfully!");
-    } catch (error) {
-      console.log(error);
-      toast.error(
-        `Error : ${error.response?.status} | ${error.response?.data?.message}`
-      );
-    }
-
-    // toast.success("Application submitted successfully!");
-  };
-
-  const handleSave = () => {
-    // Handle save job action
-    if (!isLogin) {
-      toast.error("Please login to save jobs.");
-      return;
-    }
-
-    if (isLogin && isRecruiter) {
-      toast.error("Recruiters cannot save jobs.");
-      return;
-    }
-
-    toast.success("Job saved successfully!");
-  };
+  }, [jobFromState?._id]);
 
   if (!selectedJob) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm text-center">
-          <h2 className="text-lg font-semibold text-gray-800">
-            No job details available.
-          </h2>
-          <p className="text-sm text-gray-500 mt-2">
-            Please go back and select a job.
-          </p>
+        <div className="bg-white border border-gray-200 rounded-xl p-8 text-center max-w-sm">
+          <h2 className="text-lg font-semibold text-gray-800">No job selected</h2>
+          <p className="text-sm text-gray-500 mt-1">Go back and select a job.</p>
           <button
             onClick={() => navigate(-1)}
-            className="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700"
+            className="mt-5 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700"
           >
-            Back
+            ← Back
           </button>
         </div>
       </div>
@@ -75,315 +45,232 @@ const JobDetails = () => {
 
   const company = selectedJob.recruiterID || {};
   const skills = selectedJob.skills
-    ? selectedJob.skills
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
+    ? selectedJob.skills.split(",").map((s) => s.trim()).filter(Boolean)
     : [];
   const posted = selectedJob.createdAt
-    ? new Date(selectedJob.createdAt).toLocaleDateString()
+    ? new Date(selectedJob.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
     : "-";
   const lastApply = selectedJob.lastDateToApply
-    ? new Date(selectedJob.lastDateToApply).toLocaleDateString()
+    ? new Date(selectedJob.lastDateToApply).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
     : "-";
+  const deadlineDays = selectedJob.lastDateToApply
+    ? Math.ceil((new Date(selectedJob.lastDateToApply) - new Date()) / (1000 * 60 * 60 * 24))
+    : null;
+  const isPastDeadline = deadlineDays !== null && deadlineDays < 0;
 
-  console.log("Selected Job Details:", selectedJob);
+  const deadlineBadge = () => {
+    if (deadlineDays === null) return null;
+    if (deadlineDays < 0) return { label: "Deadline passed", cls: "bg-gray-100 text-gray-500" };
+    if (deadlineDays === 0) return { label: "Last day!", cls: "bg-red-600 text-white" };
+    if (deadlineDays <= 3) return { label: `${deadlineDays}d left`, cls: "bg-red-600 text-white" };
+    if (deadlineDays <= 7) return { label: `${deadlineDays}d left`, cls: "bg-amber-500 text-white" };
+    return { label: `${deadlineDays}d left`, cls: "bg-green-100 text-green-800" };
+  };
+
+  const handleApplyNow = async () => {
+    if (!isLogin) return toast.error("Please login to apply for jobs.");
+    if (isRecruiter) return toast.error("Recruiters cannot apply for jobs.");
+    if (isPastDeadline) return toast.error("The application deadline has passed.");
+    try {
+      const res = await api.post("/user/apply-job", { jobID: selectedJob._id });
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(`Error: ${error.response?.status} | ${error.response?.data?.message}`);
+    }
+  };
+
+  const handleSave = () => {
+    if (!isLogin) return toast.error("Please login to save jobs.");
+    if (isRecruiter) return toast.error("Recruiters cannot save jobs.");
+    toast.success("Job saved successfully!");
+  };
+
+  const badge = deadlineBadge();
+
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main product-like panel */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold text-gray-900">
-                  {selectedJob.title}
-                </h1>
-                <p className="text-sm text-gray-500 mt-2">
-                  {company.companyName || selectedJob.company} • Posted:{" "}
-                  {posted}
-                </p>
+      <div className="max-w-6xl mx-auto">
 
-                <div className="mt-4 flex flex-wrap items-center gap-3">
-                  <span className="inline-flex items-center text-xs px-3 py-1 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-100">
-                    {selectedJob.jobType}
-                  </span>
-                  <span className="inline-flex items-center text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-100">
-                    {selectedJob.workType}
-                  </span>
-                  <span className="inline-flex items-center text-xs px-2 py-1 rounded-full bg-gray-50 text-gray-800 border border-gray-100">
-                    {selectedJob.experienceLevel}
-                  </span>
+        <button onClick={() => navigate(-1)} className="mb-6 text-sm text-gray-500 hover:text-gray-800">
+          ← Back to listings
+        </button>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          {/* Main panel */}
+          <div className="lg:col-span-2 space-y-5">
+
+            {/* Header */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+
+                {/* Title + tags */}
+                <div className="flex-1">
+                  <h1 className="text-2xl font-bold text-gray-900">{selectedJob.title}</h1>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {company.companyName || selectedJob.company} · Posted {posted}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {[selectedJob.jobType, selectedJob.workType, selectedJob.experienceLevel].filter(Boolean).map((tag) => (
+                      <span key={tag} className="text-xs px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 font-medium">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Salary + buttons */}
+                <div className="w-full md:w-48 flex-shrink-0">
+                  <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 text-center">
+                    <div className="text-xs text-amber-700 uppercase tracking-wide font-medium">Salary</div>
+                    <div className="text-2xl font-extrabold text-amber-900 mt-1">
+                      {selectedJob.salary ? `₹${Number(selectedJob.salary).toLocaleString("en-IN")}` : "Negotiable"}
+                    </div>
+                    <div className="text-xs text-amber-700 mt-1">
+                      {selectedJob.noOfOpenings || 1} opening{selectedJob.noOfOpenings > 1 ? "s" : ""}
+                    </div>
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      onClick={handleApplyNow}
+                      disabled={isPastDeadline}
+                      className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                        isPastDeadline ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 text-white"
+                      }`}
+                    >
+                      {isPastDeadline ? "Closed" : "Apply Now"}
+                    </button>
+                    <button onClick={handleSave} className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50">
+                      Save
+                    </button>
+                  </div>
+                  {isPastDeadline && (
+                    <p className="mt-2 text-xs text-center text-gray-400">Applications are no longer accepted</p>
+                  )}
                 </div>
               </div>
 
-              {/* Prominent salary box */}
-              <div className="flex-shrink-0">
-                <div className="rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200 p-4 text-center w-48">
-                  <div className="text-sm text-yellow-700">Salary</div>
-                  <div className="mt-2 text-3xl font-extrabold text-yellow-900">
-                    {selectedJob.salary
-                      ? `₹${selectedJob.salary}`
-                      : "Negotiable"}
-                  </div>
-                  <div className="text-xs text-yellow-700 mt-1">
-                    {selectedJob.noOfOpenings || 1} opening(s)
-                  </div>
-                </div>
-                <div className="mt-3 flex gap-2">
-                  <button
-                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 text-sm"
-                    onClick={handleApplyNow}
-                  >
-                    Apply Now
-                  </button>
-                  <button
-                    className="inline-flex items-center justify-center gap-1 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                    onClick={handleSave}
-                  >
-                    Save
-                  </button>
-                </div>
+              {/* Description */}
+              <div className="mt-6 border-t border-gray-100 pt-5">
+                <h2 className="text-base font-semibold text-gray-800 mb-2">About this role</h2>
+                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{selectedJob.description}</p>
               </div>
             </div>
 
-            <div className="mt-6">
-              <h2 className="text-lg font-semibold text-gray-800">Overview</h2>
-              <p className="mt-3 text-gray-700 whitespace-pre-line">
-                {selectedJob.description}
+            {/* Requirements */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+              <h3 className="text-base font-semibold text-gray-800 mb-4">Requirements</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { label: "Experience", value: selectedJob.experienceLevel },
+                  { label: "Job type", value: selectedJob.jobType },
+                  { label: "Work type", value: selectedJob.workType },
+                  { label: "Location", value: selectedJob.location },
+                ].map(({ label, value }) => (
+                  <div key={label}>
+                    <div className="text-xs text-gray-400 uppercase tracking-wide font-medium">{label}</div>
+                    <div className="text-sm font-medium text-gray-900 mt-1">{value || "—"}</div>
+                  </div>
+                ))}
+              </div>
+
+              {skills.length > 0 && (
+                <div className="mt-5 border-t border-gray-100 pt-4">
+                  <div className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-2">Skills</div>
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((sk) => (
+                      <span key={sk} className="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">
+                        {sk}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <aside className="space-y-4">
+
+            {/* Deadline */}
+            <div className={`rounded-2xl p-5 border shadow-sm ${isPastDeadline ? "bg-gray-50 border-gray-200" : "bg-white border-red-100"}`}>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-medium uppercase tracking-wide text-gray-400">Deadline</span>
+                {badge && (
+                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badge.cls}`}>{badge.label}</span>
+                )}
+              </div>
+              <div className={`text-xl font-bold ${isPastDeadline ? "text-gray-400 line-through" : "text-red-700"}`}>
+                {lastApply}
+              </div>
+              <p className="mt-2 text-xs text-gray-500">
+                {isPastDeadline ? "This job is no longer accepting applications." : "Apply before this date."}
               </p>
             </div>
-          </div>
 
-          {/* Requirements / Product Specs */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-800">
-              Requirements
-            </h3>
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <div className="text-sm text-gray-500">Experience</div>
-                <div className="font-medium text-gray-900 mt-1">
-                  {selectedJob.experienceLevel}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">Job Type</div>
-                <div className="font-medium text-gray-900 mt-1">
-                  {selectedJob.jobType}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">Work Type</div>
-                <div className="font-medium text-gray-900 mt-1">
-                  {selectedJob.workType}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">Location</div>
-                <div className="font-medium text-gray-900 mt-1">
-                  {selectedJob.location}
-                </div>
-              </div>
-            </div>
+            {/* Recruiter */}
+            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <div className="text-xs font-medium uppercase tracking-wide text-gray-400 mb-3">Posted by</div>
 
-            <div className="mt-6">
-              <h4 className="text-sm text-gray-500">Skills</h4>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {skills.length > 0 ? (
-                  skills.map((sk) => (
-                    <span
-                      key={sk}
-                      className="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-800"
-                    >
-                      {sk}
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {company.photo ? (
+                    <img src={company.photo} alt={company.fullName} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-lg font-bold text-indigo-400">
+                      {company.fullName?.charAt(0)?.toUpperCase() || "R"}
                     </span>
-                  ))
+                  )}
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-gray-800">{company.fullName || "Recruiter"}</div>
+                  <div className="text-xs text-gray-500">{company.companyName || "—"}</div>
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-2 text-sm">
+                {company.companyEmail ? (
+                  <a href={`mailto:${company.companyEmail}`} className="flex items-center gap-2 text-md  text-blue-400 hover:text-blue-800">
+                    <SiGmail /> {company.companyEmail}
+                  </a>
                 ) : (
-                  <span className="text-sm text-gray-500">
-                    No skills listed.
-                  </span>
+                  <span className="text-gray-400 text-xs italic">No email available</span>
+                )}
+                {company.companyPhone && (
+                  <a href={`tel:${company.companyPhone}`} className="flex items-center gap-2 text-md  text-blue-400 hover:text-blue-800">
+                    <FaPhone /> {company.companyPhone}
+                  </a>
                 )}
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Right sidebar */}
-        <aside className="space-y-6">
-          <div>
-            <button
-              onClick={() => navigate(-1)}
-              className="w-full inline-flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm hover:bg-gray-300"
-            >
-              Back
-            </button>
-          </div>
-          {/* Last Apply - highlighted */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-red-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm text-gray-500">Last Date to Apply</div>
-                <div className="mt-1 text-lg font-bold text-red-700">
-                  {lastApply}
-                </div>
-              </div>
-              <div
-                className={`px-3 py-2 rounded-full text-xs font-semibold ${(() => {
-                  try {
-                    const days = Math.ceil(
-                      (new Date(selectedJob.lastDateToApply) - new Date()) /
-                        (1000 * 60 * 60 * 24)
-                    );
-                    if (days <= 3) return "bg-red-600 text-white";
-                    if (days <= 7) return "bg-amber-500 text-white";
-                    return "bg-green-100 text-green-800";
-                  } catch (e) {
-                    return "bg-gray-100 text-gray-800";
-                  }
-                })()}`}
-              >
-                {(() => {
-                  try {
-                    const days = Math.ceil(
-                      (new Date(selectedJob.lastDateToApply) - new Date()) /
-                        (1000 * 60 * 60 * 24)
-                    );
-                    if (days < 0) return `${Math.abs(days)} days ago`;
-                    return `${days} days left`;
-                  } catch (e) {
-                    return "-";
-                  }
-                })()}
-              </div>
-            </div>
-            <p className="mt-3 text-sm text-gray-600">
-              Make sure to apply before the deadline. Late applications may not
-              be considered.
-            </p>
-          </div>
-
-          {/* Recruiter / Company Card with social links (photo only in sidebar) */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div className="flex items-start gap-3">
-              <div className="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                {company.photo ? (
-                  <img
-                    src={company.photo}
-                    alt={company.fullName}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="text-lg font-semibold text-gray-600">
-                    {company.fullName?.charAt(0) || "R"}
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
-                <div className="text-sm font-medium text-gray-800">
-                  {company.fullName}
-                </div>
-                <div className="text-sm text-gray-500">
-                  {company.companyName}
-                </div>
-                <div className="mt-3 text-sm text-gray-700 space-y-1">
-                  <div>
-                    Email:{" "}
-                    <a
-                      className="text-indigo-600"
-                      href={`mailto:${company.companyEmail}`}
-                    >
-                      {company.companyEmail}
-                    </a>
-                  </div>
-                  <div>
-                    Phone:{" "}
-                    <a
-                      className="text-indigo-600"
-                      href={`tel:${company.companyPhone}`}
-                    >
-                      {company.companyPhone}
-                    </a>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center gap-3">
+              {(company.linkedin || company.insta || company.twitter || company.companyWebsite) && (
+                <div className="mt-4 pt-4 border-t border-gray-100 flex gap-6">
                   {company.linkedin && (
-                    <a
-                      href={company.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-indigo-600 hover:text-indigo-800"
-                      aria-label="LinkedIn"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.5 8h4V24h-4zM7.5 8h3.84v2.18h.05c.54-1.02 1.86-2.09 3.83-2.09 4.1 0 4.86 2.7 4.86 6.21V24h-4v-7.5c0-1.8-.03-4.12-2.51-4.12-2.51 0-2.89 1.96-2.89 3.99V24h-4z" />
-                      </svg>
+                    <a href={company.linkedin} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-700 text-2xl">
+                      <FaLinkedin />
                     </a>
                   )}
                   {company.insta && (
-                    <a
-                      href={company.insta}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-pink-600 hover:text-pink-800"
-                      aria-label="Instagram"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm8.5 3a1.5 1.5 0 11.001 3.001A1.5 1.5 0 0115.5 5zM12 8a4 4 0 110 8 4 4 0 010-8z" />
-                      </svg>
+                    <a href={company.insta} target="_blank" rel="noreferrer" className="text-pink-500 hover:text-pink-700 text-2xl">
+                      <FaInstagram />
                     </a>
                   )}
                   {company.twitter && (
-                    <a
-                      href={company.twitter}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-sky-600 hover:text-sky-800"
-                      aria-label="Twitter"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.28 4.28 0 001.88-2.37 8.59 8.59 0 01-2.71 1.04 4.28 4.28 0 00-7.29 3.9A12.13 12.13 0 013 5.1a4.28 4.28 0 001.33 5.71c-.65-.02-1.27-.2-1.81-.5v.05a4.28 4.28 0 003.43 4.19 4.3 4.3 0 01-1.81.07 4.28 4.28 0 003.99 2.97A8.58 8.58 0 012 19.54a12.09 12.09 0 006.56 1.92c7.88 0 12.2-6.53 12.2-12.2 0-.19 0-.38-.01-.57A8.7 8.7 0 0022.46 6z" />
-                      </svg>
+                    <a href={company.twitter} target="_blank" rel="noreferrer" className="text-black/70 hover:text-black text-2xl">
+                      <FaXTwitter />
                     </a>
                   )}
                   {company.companyWebsite && (
-                    <a
-                      href={company.companyWebsite}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-gray-600 hover:text-gray-800"
-                      aria-label="Website"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm3 14.5v-1.79A6.98 6.98 0 0112 18a6.98 6.98 0 01-3-13.29V6.5A8.5 8.5 0 0015 16.5z" />
-                      </svg>
+                    <a href={company.companyWebsite} target="_blank" rel="noreferrer" className="text-gray-500 hover:text-gray-700 text-2xl">
+                      <TbWorldShare />
                     </a>
                   )}
                 </div>
-              </div>
+              )}
             </div>
-          </div>
-        </aside>
+
+          </aside>
+        </div>
       </div>
     </div>
   );
