@@ -10,7 +10,7 @@ const Home = () => {
   const showToast = () => {
     setToast(true);
     setTimeout(() => setToast(false), 3000);
-     setTimeout(() => navigate("/login"), 3200);
+     setTimeout(() => navigate("/login"), 3000);
   };
 
   useEffect(() => {
@@ -181,7 +181,8 @@ const Home = () => {
                           <p className="text-lg font-bold text-white">{job.salary}</p>
                           <p className="text-xs text-gray-400">Monthly</p>
                         </div>
-                        <button className="border-2 border-gray-800 text-slate-800 bg-white rounded-full px-4 py-1.5 text-sm font-semibold hover:bg-gray-800 hover:text-white transition-colors whitespace-nowrap">
+                        <button onClick={showToast} 
+                        className="border-2 border-gray-800 text-slate-800 bg-white rounded-full px-4 py-1.5 text-sm font-semibold hover:bg-gray-800 hover:text-white transition-colors whitespace-nowrap">
                           Apply Now
                         </button>
                       </div>
