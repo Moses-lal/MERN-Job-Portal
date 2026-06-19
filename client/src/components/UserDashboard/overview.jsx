@@ -145,7 +145,7 @@ const handleDeleteProject = async (projectId) => {
 
     <button
       onClick={() => setEducationModal(true)}
-      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+      className="px-4 py-2 text-sm font-medium text-white bg-[#3f88cc] rounded-lg hover:bg-[#2265a3] transition"
     >
       Add Education
     </button>
@@ -204,7 +204,7 @@ const handleDeleteProject = async (projectId) => {
     <h2 className="text-lg font-semibold text-gray-800">Internships</h2>
     <button
       onClick={() => setExperienceModal(true)}
-      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+      className="px-4 py-2 text-sm font-medium text-white bg-[#3f88cc] rounded-lg hover:bg-[#2265a3] transition"
     >
       Add
     </button>
@@ -245,7 +245,7 @@ const handleDeleteProject = async (projectId) => {
     <h2 className="text-lg font-semibold text-gray-800">Projects</h2>
     <button
       onClick={() => setProjectModal(true)}
-      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+      className="px-4 py-2 text-sm font-medium text-white bg-[#3f88cc] rounded-lg hover:bg-[#2265a3] transition"
     >
       Add
     </button>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RxLinkedinLogo, RxGithubLogo, RxInstagramLogo } from "react-icons/rx";
 import { RiTwitterXLine } from "react-icons/ri";
 import { TbWorldWww } from "react-icons/tb";
-import { FcCamera } from "react-icons/fc";
+import { FaCamera } from "react-icons/fa6";
 import api from "../../config/api";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/authcontext";
@@ -105,9 +105,9 @@ const Profile = () => {
                 />
                 <label
                   htmlFor="dp"
-                  className="absolute bottom-0 right-0 border-l border-t border-[var(--secondary)] p-1 rounded-br-xl rounded-tl-xl text-lg bg-[var(--primary)] hover:bg-[var(--tertiary)]"
+                  className="absolute bottom-0 right-0 border-2 border-t border-[var(--secondary)]  rounded-br-xl rounded-tl-xl text-lg p-2 text-white bg-[#1E2A38] hover:bg-cyan-800"
                 >
-                  <FcCamera />
+                  <FaCamera/>
                 </label>
                 <input
                   type="file"

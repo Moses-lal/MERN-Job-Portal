@@ -122,7 +122,7 @@ const Application = () => {
                   </div>
 
                   <div className="flex flex-col items-end gap-2">
-                    <button onClick={() => handleView(application)} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">View</button>
+                    <button onClick={() => handleView(application)} className="px-4 py-2 bg-[#3f88cc] text-white rounded-lg text-sm hover:bg-[#2265a3]">View</button>
                     <button onClick={() => handleWithdraw(application._id)} className="px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Withdraw</button>
                   </div>
                 </div>

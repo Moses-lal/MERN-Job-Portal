@@ -62,7 +62,7 @@ const Sidebar = ({ active, setActive }) => {
   };
   return (
     <>
-      <div className="bg-gradient-to-b from-[var(--primary)]  to-[var(--secondary)] h-full p-2 flex flex-col justify-between">
+      <div className="bg-gradient-to-br from-[var(--primary)] via-[#1E2A38] to-[var(--secondary)] h-full p-2 flex flex-col justify-between">
         <div>
           <h1 className="text-2xl border-b-2 text-center text-[var(--text)] font-bold pb-3 pt-3">
             {" "}
@@ -76,7 +76,7 @@ const Sidebar = ({ active, setActive }) => {
                   key={idx}
                   className={`flex gap-2 items-center p-3 border border-[var(--background)] rounded-lg ${
                     active === item.value
-                      ? "bg-[var(--tertiary)]"
+                      ? "bg-[#14676a]"
                       : "hover:bg-[var(--primary)] text-[var(--text)]"
                   }`}
                   onClick={() => setActive(item.value)}

@@ -121,7 +121,7 @@ const Register = () => {
     <>
       <div className=" bg-gray-900 min-h-screen flex items-center justify-center bg-[url('./register2.jpg')] bg-cover">
       
-        <div className="min-w-md bg-white rounded-2xl p-8 border-t-2 flex space-x-1 mt-5 border-t-[var(--text)] border-e-2 border-e-[var(--text)] transition-all ease-out duration-500 hover:shadow-xl hover:shadow-[#6BA3D6] hover:-translate-y-4 hover:scale-[1.05]">
+        <div className="min-w-md bg-white rounded-2xl p-8 border-t-2 flex space-x-1 mt-5 border-t-[#6BA3D6] border-e-2 border-e-[#6BA3D6] transition-all ease-out duration-500 hover:shadow-xl hover:shadow-[#6BA3D6] hover:-translate-y-4 hover:scale-[1.05]">
 
           <div className="text-2xl border max-h-md min-w-sm bg-[url('./register3.avif')] bg-contain flex items-end justify-center">
             
@@ -133,7 +133,7 @@ const Register = () => {
           </div>
 
           <form className="space-y-2 borde p-3 text-[var(--primary)]" onSubmit={handleSubmit}>
-          <h1 className="text-[var(--text)] text-2xl font-bold mb-3 "> Register / Sign Up   </h1>
+          <h1 className="text-[#6BA3D6] text-2xl font-bold mb-3 "> Register / Sign Up   </h1>
 
             <div>
               <label
@@ -144,13 +144,13 @@ const Register = () => {
               </label>
               <span className="flex justify-center items-center gap-5">
                 <span className="flex gap-2">
-                <input type="radio" name="role" id="applicant" value={"applicant"} onChange={handlechange} className="accent-purple-800" />
-                <label htmlFor="applicant" className=" transition-all duration-200 text-xl hover:underline hover:text-[var(--text)]">Applicant</label>
+                <input type="radio" name="role" id="applicant" value={"applicant"} onChange={handlechange} className="accent-emerald-600" />
+                <label htmlFor="applicant" className=" transition-all duration-200 text-xl hover:underline hover:text-[#6BA3D6]">Applicant</label>
                 </span>
                
                <span className="flex gap-2">
-                <input type="radio" name="role" id="recruiter" value={"recruiter"} onChange={handlechange} className="accent-purple-800"/>
-                <label htmlFor="recruiter" className="transition-all duration-200 text-xl hover:underline hover:text-[var(--text)]">Recruiter</label>
+                <input type="radio" name="role" id="recruiter" value={"recruiter"} onChange={handlechange} className="accent-emerald-600"/>
+                <label htmlFor="recruiter" className="transition-all duration-200 text-xl hover:underline hover:text-[#6BA3D6]">Recruiter</label>
                </span>
                
               </span>
@@ -166,7 +166,7 @@ const Register = () => {
                   type="name"
                   id="fullName"
                   name="fullName"
-                  className="border-b-1 w-full p-2 focus:outline-[var(--text)]"
+                  className="border-b-1 w-full p-2 focus:outline-[#6BA3D6]"
                   value={registerData.fullName}
                   onChange={handlechange}
                   placeholder="Name.."
@@ -184,7 +184,7 @@ const Register = () => {
                   type="email"
                   id="email"
                   name="email"
-                  className="border-b-1 w-full p-2 focus:outline-[var(--text)]"
+                  className="border-b-1 w-full p-2 focus:outline-[#6BA3D6]"
                   value={registerData.email}
                   onChange={handlechange}
                   placeholder="user@email.com"
@@ -199,7 +199,7 @@ const Register = () => {
                 <label className="block text-xl font-bold">Password:</label>
                 <input
                   type="password"
-                  className="border-b-1 w-full p-2 focus:outline-[var(--text)]"
+                  className="border-b-1 w-full p-2 focus:outline-[#6BA3D6]"
                   id="password"
                   name="password"
                   value={registerData.password}
@@ -217,7 +217,7 @@ const Register = () => {
                 <label className="text-xl font-bold ">Confirm Password:</label>
                 <input
                   type="password"
-                  className="border-b-1 w-full p-2 focus:outline-[var(--text)]"
+                  className="border-b-1 w-full p-2 focus:outline-[#6BA3D6]"
                   id="confirmPassword"
                   name="confirmPassword"
                   value={registerData.confirmPassword}
@@ -237,7 +237,7 @@ const Register = () => {
                   type="name"
                   id="phone"
                   name="phone"
-                  className="border-b-1 w-full p-2 focus:outline-[var(--text)]"
+                  className="border-b-1 w-full p-2 focus:outline-[#6BA3D6]"
                   value={registerData.phone}
                   onChange={handlechange}
                   placeholder="+91"

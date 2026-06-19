@@ -28,11 +28,11 @@ const Jobs = () => {
   return (
     <>
       <div className="p-4">
-        <div className="flex justify-between border-b-2 border-[var(--secondary)] pb-4 mb-4 items-center">
-          <h1 className="text-2xl font-bold text-[var(--text)]">All Posted Jobs</h1>
+        <div className="flex justify-between border-b-2 border-[#6BA3D6] pb-4 mb-4 items-center">
+          <h1 className="text-2xl font-bold text-[#6BA3D6]">All Posted Jobs</h1>
 
           <button
-            className="bg-[var(--text)] text-white py-2 px-4 rounded"
+            className="bg-[#6BA3D6] text-white py-2 px-4 rounded"
             onClick={handleAddJob}
           >
             Add New Job

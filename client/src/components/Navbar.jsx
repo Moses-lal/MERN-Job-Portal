@@ -14,37 +14,37 @@ const Navbar = () => {
         <div className="flex gap-5 text-white text-xl mx-60 bg-[var(--primary)]/90 border-2 border-[var(--text)] shadow-md shadow-[#c589e8] p-5 rounded-2xl">
           <Link
             to={"/"}
-            className="hover:font-medium hover:text-[var(--tertiary)] hover:transition-all 2s "
+            className="hover:font-medium hover:text-[#ebf6f5] hover:transition-all 2s "
           >
             Home |
           </Link>
           <Link
             to={"/about"}
-            className="hover:font-medium hover:text-[var(--tertiary)] hover:transition-all 2s"
+            className="hover:font-medium hover:text-[#ebf6f5] hover:transition-all 2s"
           >
             About{" "}
           </Link>
           <Link
             to={"/contact"}
-            className="hover:font-medium hover:text-[var(--tertiary)] hover:transition-all 2s"
+            className="hover:font-medium hover:text-[#ebf6f5] hover:transition-all 2s"
           >
             Contact{" "}
           </Link>
           <Link
             to={"/jobs"}
-            className="hover:font-medium hover:text-[var(--tertiary)] hover:transition-all 2s"
+            className="hover:font-medium hover:text-[#ebf6f5] hover:transition-all 2s"
           >
             Jobs{" "}
           </Link>
           <Link
             to={"/login"}
-            className="hover:font-medium hover:text-[var(--tertiary)] hover:transition-all 2s"
+            className="hover:font-medium hover:text-[#ebf6f5] hover:transition-all 2s"
           >
             Login{" "}
           </Link>
           <Link
             to={"/register"}
-            className="hover:font-medium hover:text-[var(--tertiary)] hover:transition-all 2s"
+            className="hover:font-medium hover:text-[#ebf6f5] hover:transition-all 2s"
           >
             Register{" "}
           </Link>
