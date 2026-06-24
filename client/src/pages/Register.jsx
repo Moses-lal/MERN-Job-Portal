@@ -119,11 +119,11 @@ const Register = () => {
 
   return (
     <>
-      <div className=" bg-gray-900 min-h-screen flex items-center justify-center bg-[url('./register2.jpg')] bg-cover">
+      <div className=" bg-gray-900 min-h-screen flex items-center justify-center bg-[url('/register2.jpg')] bg-cover">
       
         <div className="min-w-md bg-white rounded-2xl p-8 border-t-2 flex space-x-1 mt-5 border-t-[#6BA3D6] border-e-2 border-e-[#6BA3D6] transition-all ease-out duration-500 hover:shadow-xl hover:shadow-[#6BA3D6] hover:-translate-y-4 hover:scale-[1.05]">
 
-          <div className="text-2xl border max-h-md min-w-sm bg-[url('./register3.avif')] bg-contain flex items-end justify-center">
+          <div className="text-2xl border max-h-md min-w-sm bg-[url('/register3.avif')] bg-contain flex items-end justify-center">
             
             <div className="bg-white rounded-2xl font-bold p-3 ">
               Looking For a <br />

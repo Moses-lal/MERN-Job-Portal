@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RiCloseCircleFill } from "react-icons/ri";
 import api from "../../config/api";
 import toast from "react-hot-toast";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/authcontext";
 
 const UpdateProfileModal = ({ isOpen, onClose }) => {
   const { setuser } = useAuth();

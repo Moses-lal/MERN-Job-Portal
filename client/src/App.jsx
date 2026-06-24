@@ -10,9 +10,9 @@ import Contact from "./pages/Contact";
 import Jobs from "./pages/Jobs"
 import Login from "./pages/Login";
 import Register from "./pages/Register"
-import Userdash from "./pages/userdash";
+import Userdash from "./pages/Userdash";
 import RecruiterDashbaord from "./pages/RecruiterDash";
-import JobDetails  from "./pages/jobDetails";
+import JobDetails from "./pages/JobDetails";
 
 const App = () => {
   return (

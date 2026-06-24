@@ -7,7 +7,7 @@ import { IoClose } from "react-icons/io5";
 import { FaUserGraduate } from "react-icons/fa";
 import { FaCode } from "react-icons/fa";
 import api from "../../config/api";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/authcontext";
 import Education from "./education"
 import Preferredmodel from "./preferredmodel";
 import AddExperienceModel from "./experience";
