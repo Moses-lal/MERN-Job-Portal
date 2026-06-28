@@ -15,20 +15,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      const allowed = [
-        process.env.CLIENT_URL,
-        /\.vercel\.app$/,  // allows ALL vercel preview URLs
-      ];
-
-      if (!origin || allowed.some(o => 
-        typeof o === "string" ? o === origin : o.test(origin)
-      )) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: [
+      "http://localhost:5173", // local frontend
+      "https://mern-job-portal-one-alpha.vercel.app", // deployed frontend
+    ],
     credentials: true,
   })
 );
