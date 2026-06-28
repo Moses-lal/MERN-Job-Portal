@@ -8,27 +8,33 @@ import { sendForgetPasswordOTP } from "../utils/sendEmail.js";
 
 export const register = async (req, res, next) => {
   try {
-    const { email, password, phone, fullName , role } = req.body;
+    const { email, password, phone, fullName, role } = req.body;
 
+  
     if (!email || !password || !phone || !fullName || !role) {
-      const error = new Error("all fields required ");
-      error.statuscode = 400;
+      const error = new Error("All fields required");
+      error.statusCode = 400;
       return next(error);
     }
 
+  
     const existinguser = await user.findOne({ email });
+
     if (existinguser) {
-      const error = new Error("already exitss");
-      error.statuscode = 409;
+      const error = new Error("User already exists");
+      error.statusCode = 409;
       return next(error);
     }
 
+    
     const photo = `https://placehold.co/600x400?text=${fullName
       .charAt(0)
       .toUpperCase()}`;
 
+    
     const hashedpassword = await bcrypt.hash(password, 10);
 
+    
     const newuser = await user.create({
       fullName,
       email,
@@ -38,11 +44,20 @@ export const register = async (req, res, next) => {
       role,
     });
 
-    res
-      .status(201)
-      .json({ message: `Welcome to JobPortal ${newuser.fullName}` });
+    
+    genauthtoken(newuser, res);
+
+    
+    return res.status(201).json({
+      success: true,
+      message: `Welcome to JobPortal ${newuser.fullName}`,
+      data: newuser,
+    });
+
   } catch (error) {
-    console.log(error);
+    console.log("Register Error:", error);
+
+    return next(error); 
   }
 };
 
