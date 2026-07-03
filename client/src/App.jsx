@@ -13,11 +13,12 @@ import Register from "./pages/Register"
 import Userdash from "./pages/Userdash";
 import RecruiterDashbaord from "./pages/RecruiterDash";
 import JobDetails from "./pages/JobDetails";
+import DesktopOnly from "./components/DesktopOnly";
 
 const App = () => {
   return (
     <>
-    
+      <DesktopOnly>
       <BrowserRouter>
     
        <Toaster/>
@@ -36,6 +37,7 @@ const App = () => {
 
         </Routes>
       </BrowserRouter>
+      </DesktopOnly>
     </>
   );
 };
